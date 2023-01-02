@@ -31,6 +31,8 @@ int main(int argc, char const *argv[])
 
         printf("$ %s", cmd_buff);
 
+        split_command_buffer(cmd_buff, &shell);
+
         eval_command(&shell);
     }
     

@@ -60,6 +60,15 @@ void read_string(char *str) {
   str[i] = '\0';
 }
 
+void split_command_buffer(char *cmd_buff, Shell *shell) {
+  char *token = strtok(cmd_buff, " ");
+  strcpy(shell->comando, token);
+  token = strtok(NULL, "");
+  if (token == NULL)
+    return;
+  strcpy(shell->parametro, token);
+}
+
 
 // ===================================================
 

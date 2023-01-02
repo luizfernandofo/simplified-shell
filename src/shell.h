@@ -35,4 +35,6 @@ void eval_command(Shell *shell);
 
 void read_string(char *str);
 
+void split_command_buffer(char *cmd_buff, Shell *shell);
+
 #endif
