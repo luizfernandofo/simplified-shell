@@ -21,13 +21,13 @@
 <br>
 
 ## Fazendo no momento
-- Pedro
+- Luiz Fernando
+    - [ ] <>
+- Pedro Augusto
     - [ ] comando `amb`
     - [ ] comando `cd <diretório>` (problema a resolver)
     - [x] shell_setup e shell_exit
     - [x] criação e realocação de env_vars
-- Luiz
-    - [ ] <>
 
 <br>
 

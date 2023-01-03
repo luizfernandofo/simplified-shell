@@ -13,6 +13,10 @@ EnvironmentVariable new_env_var(char *name, char *content) {
 EnvironmentVariable * realloc_env_vars(EnvironmentVariable *pointer, int quantity) {
     EnvironmentVariable *env_vars = NULL;
 
+    if (pointer == NULL) {
+        pointer = (EnvironmentVariable *) malloc(sizeof(EnvironmentVariable));
+    }
+
     env_vars = (EnvironmentVariable *) realloc(pointer, quantity * sizeof(EnvironmentVariable));
 
     if (env_vars == NULL) {

@@ -24,6 +24,7 @@ static void limpa();
 void shell_setup(Shell *shell){
     char hostname_buffer[1023+1];
 
+    shell->env_vars = NULL;
     shell->qty_env_vars = 0;
 
     if (gethostname(hostname_buffer, sizeof(hostname_buffer)) != 0) {
