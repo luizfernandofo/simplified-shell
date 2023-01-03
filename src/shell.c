@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "definitions.h"
 #include "shell_record_manipulator.h"
 
@@ -21,8 +22,22 @@ static void limpa();
 // ===================================================
 
 void shell_setup(Shell *shell){
+    char hostname_buffer[1023+1];
 
-    return;
+    shell->qty_env_vars = 0;
+
+    if (gethostname(hostname_buffer, sizeof(hostname_buffer)) != 0) {
+        printf("Erro ao obter o nome do host.");
+        exit(EXIT_FAILURE);
+    }
+
+    add_environment_variable(shell, "HOST", hostname_buffer);
+    add_environment_variable(shell, "PRONTO", "~$ ");
+    add_environment_variable(shell, "SHELL", "simplified-shell");
+}
+
+void shell_exit(Shell *shell) {
+    if (shell->env_vars) free(shell->env_vars);
 }
 
 void eval_command(Shell *shell){
@@ -41,8 +56,10 @@ void eval_command(Shell *shell){
     else if(strcmp(shell->comando, "limpa") == 0)
         limpa();
 
-    else if(strcmp(shell->comando, "sair") == 0)
+    else if(strcmp(shell->comando, "sair") == 0){
+        shell_exit(shell);
         exit(EXIT_SUCCESS);
+    }
 
     else
         printf("Execucao de comando externo.");
@@ -67,6 +84,19 @@ void split_command_buffer(char *cmd_buff, Shell *shell) {
   if (token == NULL)
     return;
   strcpy(shell->parametro, token);
+}
+
+
+void add_environment_variable(Shell *shell, char *name, char *content) {
+    int quantity = shell->qty_env_vars;
+
+    shell->env_vars = realloc_env_vars(shell->env_vars, quantity + 1);
+
+    shell->env_vars[quantity] = new_env_var(name, content);
+
+    shell->qty_env_vars++;
+
+    // Manipular o arquivo .meushell.rec
 }
 
 

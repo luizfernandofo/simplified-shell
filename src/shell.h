@@ -26,15 +26,21 @@ typedef struct Shell{
 
     EnvironmentVariable* env_vars;
 
+    int qty_env_vars;
+
 } Shell;
 
 
 void shell_setup(Shell *shell);
+
+void shell_exit(Shell *shell);
 
 void eval_command(Shell *shell);
 
 void read_string(char *str);
 
 void split_command_buffer(char *cmd_buff, Shell *shell);
+
+void add_environment_variable(Shell *shell, char *name, char *content);
 
 #endif
