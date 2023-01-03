@@ -22,12 +22,12 @@
 
 ## Fazendo no momento
 - Pedro
-    - shell_setup e shell_exit
-    - criação e realocação de env_vars
-    - comando `cd <diretório>` (problema a resolver)
-    - comando `amb`
+    - [ ] comando `amb`
+    - [ ] comando `cd <diretório>` (problema a resolver)
+    - [x] shell_setup e shell_exit
+    - [x] criação e realocação de env_vars
 - Luiz
-    - <>
+    - [ ] <>
 
 <br>
 

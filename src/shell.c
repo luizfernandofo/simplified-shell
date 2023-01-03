@@ -79,13 +79,16 @@ void read_string(char *str) {
 
 void split_command_buffer(char *cmd_buff, Shell *shell) {
   char *token = strtok(cmd_buff, " ");
+
   strcpy(shell->comando, token);
+
   token = strtok(NULL, "");
+
   if (token == NULL)
     return;
+
   strcpy(shell->parametro, token);
 }
-
 
 void add_environment_variable(Shell *shell, char *name, char *content) {
     int quantity = shell->qty_env_vars;
@@ -99,6 +102,14 @@ void add_environment_variable(Shell *shell, char *name, char *content) {
     // Manipular o arquivo .meushell.rec
 }
 
+char* get_env_var_content(Shell *shell, char *name) {
+    int i;
+    for (i = 0; i < shell->qty_env_vars; i++) {
+        if ( !strcmp(shell->env_vars[i].name, name) ) 
+            return shell->env_vars[i].content;
+    }
+    return NULL;
+}
 
 // ===================================================
 

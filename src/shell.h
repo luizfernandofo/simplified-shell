@@ -43,4 +43,6 @@ void split_command_buffer(char *cmd_buff, Shell *shell);
 
 void add_environment_variable(Shell *shell, char *name, char *content);
 
+char* get_env_var_content(Shell *shell, char *name);
+
 #endif
