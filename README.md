@@ -6,9 +6,9 @@
     - [ ] `amb`
         - [ ] `amb $VAR`
         - [ ] `amb VAR=<valor>`
-            - [ ] `HOST`
-            - [ ] `PRONTO`
-            - [ ] `SHELL`
+            - [x] `HOST`
+            - [x] `PRONTO`
+            - [x] `SHELL`
     - [ ] `cd <diretório>`
     - [x] `limpa`
     - [x] `sair`
@@ -27,4 +27,14 @@
     - comando `cd <diretório>` (problema a resolver)
     - comando `amb`
 - Luiz
-    - _
+    - <>
+
+<br>
+
+## Questões
+- DTA deve ser uma variavel de ambiente?
+    - Se for o caso, deve ser inserida em env_vars
+- Definir um formato para PRONTO
+    - `“$DTA \> ”`
+    - `“/DTA~$ ”`
+    - ...

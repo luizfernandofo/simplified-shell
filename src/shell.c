@@ -121,6 +121,8 @@ static void amb(const char *params){
 }
 
 static void cd(const char *DTA){
+    // Sempre que a variável DTA for alterada, atualizar
+    // a variável PRONTO, de modo que PRONTO=“$DTA \> ”
     return;
 }
 

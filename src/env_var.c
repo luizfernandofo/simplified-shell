@@ -15,8 +15,8 @@ EnvironmentVariable * realloc_env_vars(EnvironmentVariable *pointer, int quantit
 
     env_vars = (EnvironmentVariable *) realloc(pointer, quantity * sizeof(EnvironmentVariable));
 
-    if (!env_vars) {
-        printf("Erro na alocacao de variavel de ambiente");
+    if (env_vars == NULL) {
+        printf("Erro na realocacao de variaveis de ambiente");
         exit(EXIT_FAILURE);
     }
 
