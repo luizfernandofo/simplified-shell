@@ -25,11 +25,10 @@ int main(int argc, char const *argv[])
 
     while(true){
 
-        // separar o comando do argumento atualizando na variavel shell
-        // e passar para eval_command
-        read_string(cmd_buff);
+        // nome exibido pelo shell imediatamente antes do cursor
+        printf("%s", shell.env_vars[1].content);
 
-        printf("$ %s\n", cmd_buff);
+        read_string(cmd_buff);
 
         split_command_buffer(cmd_buff, &shell);
 

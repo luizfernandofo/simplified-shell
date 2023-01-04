@@ -18,8 +18,6 @@ Shell deve conter os seguintes comandos:
 
 typedef struct Shell{
 
-    char DTA[DTA_BUF_SIZE];
-
     char comando[COMMAND_BUF_SIZE];
 
     char parametro[PARAMETERS_BUF_SIZE];

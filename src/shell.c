@@ -18,14 +18,14 @@ static void ajuda();
 
 static void amb(Shell *shell, char *params);
 
-static void cd(const char *DTA);
+static void cd(Shell *shell);
 
 static void limpa();
 
 // ===================================================
 
 void shell_setup(Shell *shell){
-    char hostname_buffer[1023+1];
+    char hostname_buffer[ENV_VAR_CONTENT_BUF_SIZE];
 
     shell->env_vars = NULL;
     shell->qty_env_vars = 0;
@@ -36,8 +36,9 @@ void shell_setup(Shell *shell){
     }
 
     add_environment_variable(shell, "HOST", hostname_buffer);
-    add_environment_variable(shell, "PRONTO", "~$ ");
+    add_environment_variable(shell, "PRONTO", "$ ");
     add_environment_variable(shell, "SHELL", "simplified-shell");
+    add_environment_variable(shell, "DTA", getenv("HOME"));
 }
 
 void shell_exit(Shell *shell) {
@@ -53,19 +54,19 @@ void eval_command(Shell *shell){
 
     //const char* shell_comands[] = {"ajuda", "amb", "cd", "limpa", "sair"};
 
-    if(strcmp(shell->comando, "ajuda") == 0)
+    if(strcmp(shell->comando, "ajuda") == 0 || strcmp(shell->comando, "help") == 0)
         ajuda();
 
     else if(strcmp(shell->comando, "amb") == 0)
         amb(shell, shell->parametro);
 
     else if(strcmp(shell->comando, "cd") == 0)
-        cd(shell->DTA);
+        cd(shell);
 
-    else if(strcmp(shell->comando, "limpa") == 0)
+    else if(strcmp(shell->comando, "limpa") == 0 || strcmp(shell->comando, "clear") == 0)
         limpa();
 
-    else if(strcmp(shell->comando, "sair") == 0){
+    else if(strcmp(shell->comando, "sair") == 0 || strcmp(shell->comando, "exit") == 0){
         shell_exit(shell);
         exit(EXIT_SUCCESS);
     }
@@ -147,9 +148,10 @@ static void amb(Shell *shell, char *params) {
     printf("\nVAR NAME | VAR CONTENT\n");
     printf("----------------------\n");
     for (index = 0; index < shell->qty_env_vars; index++) {
-      printf("%s | ", shell->env_vars[index].name);
+      printf("%s\t| ", shell->env_vars[index].name);
       printf("%s\n", shell->env_vars[index].content);
     }
+    printf("----------------------\n");
   }
   // $ amb $VAR
   else if (regex_match(env_var_content_patt, params)) {
@@ -176,7 +178,7 @@ static void amb(Shell *shell, char *params) {
   return;
 }
 
-static void cd(const char *DTA){
+static void cd(Shell *shell){
     // Sempre que a variável DTA for alterada, atualizar
     // a variável PRONTO, de modo que PRONTO=“$DTA \> ”
     return;
