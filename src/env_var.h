@@ -10,8 +10,8 @@ typedef struct EnvironmentVariable {
 
 } EnvironmentVariable;
 
-#endif
-
 EnvironmentVariable new_env_var(char *name, char *content);
 
 EnvironmentVariable *realloc_env_vars(EnvironmentVariable *pointer, int quantity);
+
+#endif

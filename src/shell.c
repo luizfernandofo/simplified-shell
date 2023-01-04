@@ -63,7 +63,7 @@ void eval_command(Shell *shell){
     }
 
     else
-        printf("Execucao de comando externo.");
+        printf("Execucao de comando externo.\n");
 
     return;
 }

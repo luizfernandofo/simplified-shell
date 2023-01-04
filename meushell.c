@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
         // e passar para eval_command
         read_string(cmd_buff);
 
-        printf("$ %s", cmd_buff);
+        printf("$ %s\n", cmd_buff);
 
         split_command_buffer(cmd_buff, &shell);
 
