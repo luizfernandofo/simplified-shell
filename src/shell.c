@@ -57,7 +57,7 @@ void eval_command(Shell *shell){
         ajuda();
 
     else if(strcmp(shell->comando, "amb") == 0)
-        amb(shell->parametro);
+        amb(shell, shell->parametro);
 
     else if(strcmp(shell->comando, "cd") == 0)
         cd(shell->DTA);
