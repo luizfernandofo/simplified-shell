@@ -34,6 +34,8 @@ int main(int argc, char const *argv[])
         split_command_buffer(cmd_buff, &shell);
 
         eval_command(&shell);
+
+        shell_clear(&shell);
     }
     
 

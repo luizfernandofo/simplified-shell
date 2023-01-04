@@ -35,6 +35,8 @@ void shell_setup(Shell *shell);
 
 void shell_exit(Shell *shell);
 
+void shell_clear(Shell *shell);
+
 void eval_command(Shell *shell);
 
 void read_string(char *str);

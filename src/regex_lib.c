@@ -2,7 +2,6 @@
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 bool regex_match(const char *pattern, char *expression){
 	regex_t regex;

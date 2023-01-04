@@ -1,11 +1,14 @@
 #include "shell.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+
 #include "definitions.h"
 #include "shell_record_manipulator.h"
+#include "regex_lib.h"
+
 
 // ===================================================
 
@@ -13,7 +16,7 @@
 
 static void ajuda();
 
-static void amb(const char *params);
+static void amb(Shell *shell, char *params);
 
 static void cd(const char *DTA);
 
@@ -39,6 +42,11 @@ void shell_setup(Shell *shell){
 
 void shell_exit(Shell *shell) {
     if (shell->env_vars) free(shell->env_vars);
+}
+
+void shell_clear(Shell *shell) {
+	strcpy(shell->comando, "\0");
+	strcpy(shell->parametro, "\0");
 }
 
 void eval_command(Shell *shell){
@@ -128,8 +136,44 @@ static void ajuda(){
     printf("sair\n");
 }
 
-static void amb(const char *params){
-    return;
+static void amb(Shell *shell, char *params) {
+  const char *env_var_content_patt = "^\\$[a-zA-Z]+$";
+  const char *set_env_var_patt = "^[a-zA-Z]+\\=[a-zA-Z]+$";
+
+  // $ amb
+  if (!strcmp(params, "\0")) {
+    // A impressão ainda será melhor formatada
+    int index;
+    printf("\nVAR NAME | VAR CONTENT\n");
+    printf("----------------------\n");
+    for (index = 0; index < shell->qty_env_vars; index++) {
+      printf("%s | ", shell->env_vars[index].name);
+      printf("%s\n", shell->env_vars[index].content);
+    }
+  }
+  // $ amb $VAR
+  else if (regex_match(env_var_content_patt, params)) {
+    char *var_name = strtok(params, "$");
+    char *var_content = get_env_var_content(shell, var_name);
+    if (var_content == NULL)
+      printf("Variavel de ambiente nao encontrada\n");
+    else
+      printf("\n%s = %s\n", var_name, var_content);
+  }
+  // $ amb VAR=<value>
+  else if (regex_match(set_env_var_patt, params)) {
+    char *var_name = strtok(params, "=");
+    char *var_content = strtok(NULL, "");
+    add_environment_variable(shell, var_name, var_content);
+    printf("Variavel de ambiente adicionada\n");
+  }
+  // Comando invalido
+  else {
+    printf("Comando invalido\n");
+    exit(EXIT_FAILURE); // Temporário
+  }
+
+  return;
 }
 
 static void cd(const char *DTA){
