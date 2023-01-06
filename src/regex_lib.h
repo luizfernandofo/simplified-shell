@@ -3,6 +3,6 @@
 
 #include <stdbool.h>
 
-bool regex_match(const char *pattern, char *expression);
+bool regex_match(const char *pattern, const char *expression);
 
 #endif

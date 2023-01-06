@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool regex_match(const char *pattern, char *expression){
+bool regex_match(const char *pattern, const char *expression){
 	regex_t regex;
 	int regexec_return;
 	

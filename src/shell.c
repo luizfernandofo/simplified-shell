@@ -16,13 +16,31 @@
 
 static void ajuda();
 
-static void amb(Shell *shell, char *params);
+static void amb(Shell *shell);
 
 static void cd(Shell *shell);
 
 static void limpa();
 
 // ===================================================
+
+// Função para DEBUG do conteúdo de memória de uma string
+void dump(void *p, int n) {
+
+  unsigned char *p1 = p;
+
+  n++;
+
+  while (n--) {
+
+    printf("%c%d", *p1, *p1);
+
+    p1++;
+
+  }
+  printf("\n");
+
+}
 
 void shell_setup(Shell *shell){
     char hostname_buffer[ENV_VAR_CONTENT_BUF_SIZE];
@@ -46,8 +64,8 @@ void shell_exit(Shell *shell) {
 }
 
 void shell_clear(Shell *shell) {
-	strcpy(shell->comando, "\0");
-	strcpy(shell->parametro, "\0");
+  shell->comando[0] = '\0';
+  shell->parametro[0] = '\0';
 }
 
 void eval_command(Shell *shell){
@@ -58,7 +76,7 @@ void eval_command(Shell *shell){
         ajuda();
 
     else if(strcmp(shell->comando, "amb") == 0)
-        amb(shell, shell->parametro);
+        amb(shell);
 
     else if(strcmp(shell->comando, "cd") == 0)
         cd(shell);
@@ -70,7 +88,6 @@ void eval_command(Shell *shell){
         shell_exit(shell);
         exit(EXIT_SUCCESS);
     }
-
     else
         printf("Execucao de comando externo.\n");
 
@@ -88,16 +105,30 @@ void read_string(char *str) {
 }
 
 void split_command_buffer(char *cmd_buff, Shell *shell) {
-  char *token = strtok(cmd_buff, " ");
+  // char token[COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE];
 
-  strcpy(shell->comando, token);
+  // strncpy(token, cmd_buff, (COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE));
 
-  token = strtok(NULL, "");
+  char *token = cmd_buff;
 
-  if (token == NULL)
-    return;
+  int i=0;
+  while(token[i] != '\0'){
 
-  strcpy(shell->parametro, token);
+    if(token[i] == ' '){
+
+      token[i] = '\0';
+      i++;
+      break;
+
+    }
+
+    i++;
+  }
+
+  strncpy(shell->comando, token, COMMAND_BUF_SIZE);
+
+  strncpy(shell->parametro, &token[i], PARAMETERS_BUF_SIZE);
+
 }
 
 void add_environment_variable(Shell *shell, char *name, char *content) {
@@ -137,12 +168,15 @@ static void ajuda(){
     printf("sair\n");
 }
 
-static void amb(Shell *shell, char *params) {
+static void amb(Shell *shell) {
   const char *env_var_content_patt = "^\\$[a-zA-Z]+$";
   const char *set_env_var_patt = "^[a-zA-Z]+\\=[a-zA-Z]+$";
 
+  char *params = shell->parametro;
+
+
   // $ amb
-  if (!strcmp(params, "\0")) {
+  if (*(params) == '\0') {
     // A impressão ainda será melhor formatada
     int index;
     printf("\nVAR NAME | VAR CONTENT\n");
@@ -160,19 +194,20 @@ static void amb(Shell *shell, char *params) {
     if (var_content == NULL)
       printf("Variavel de ambiente nao encontrada\n");
     else
-      printf("\n%s = %s\n", var_name, var_content);
+      printf("\n%s=%s\n", var_name, var_content);
   }
   // $ amb VAR=<value>
   else if (regex_match(set_env_var_patt, params)) {
     char *var_name = strtok(params, "=");
     char *var_content = strtok(NULL, "");
+    //printf("%s\n", var_content);
     add_environment_variable(shell, var_name, var_content);
     printf("Variavel de ambiente adicionada\n");
   }
   // Comando invalido
   else {
     printf("Comando invalido\n");
-    exit(EXIT_FAILURE); // Temporário
+    //exit(EXIT_FAILURE); // Temporário
   }
 
   return;

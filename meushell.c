@@ -35,6 +35,8 @@ int main(int argc, char const *argv[])
         eval_command(&shell);
 
         shell_clear(&shell);
+
+        cmd_buff[0] = '\0';
     }
     
 
