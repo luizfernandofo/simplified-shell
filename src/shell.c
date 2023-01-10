@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "definitions.h"
 #include "shell_record_manipulator.h"
@@ -44,6 +45,7 @@ void dump(void *p, int n) {
 
 void shell_setup(Shell *shell){
     char hostname_buffer[ENV_VAR_CONTENT_BUF_SIZE];
+    char prompt_buffer[ENV_VAR_CONTENT_BUF_SIZE];
 
     shell->env_vars = NULL;
     shell->qty_env_vars = 0;
@@ -52,9 +54,12 @@ void shell_setup(Shell *shell){
         printf("Erro ao obter o nome do host.");
         exit(EXIT_FAILURE);
     }
+    
 
+    sprintf(prompt_buffer, "%s:%s$ ", hostname_buffer, getenv("HOME"));
+  
     add_environment_variable(shell, "HOST", hostname_buffer);
-    add_environment_variable(shell, "PRONTO", "$ ");
+    add_environment_variable(shell, "PRONTO", prompt_buffer);
     add_environment_variable(shell, "SHELL", "simplified-shell");
     add_environment_variable(shell, "DTA", getenv("HOME"));
 }
@@ -114,7 +119,7 @@ void split_command_buffer(char *cmd_buff, Shell *shell) {
   int i=0;
   while(token[i] != '\0'){
 
-    if(token[i] == ' '){
+  if(token[i] == ' '){
 
       token[i] = '\0';
       i++;
@@ -143,6 +148,28 @@ void add_environment_variable(Shell *shell, char *name, char *content) {
     // Manipular o arquivo .meushell.rec
 }
 
+bool has_env_var(Shell *shell, char *name) {
+    int i;
+    for (i = 0; i < shell->qty_env_vars; i++) {
+        if ( !strcmp(shell->env_vars[i].name, name) ) 
+            return true;
+    }
+    return false;
+}
+
+
+bool set_env_var_content(Shell *shell, char *name, char *content) {
+    int i;
+    for (i = 0; i < shell->qty_env_vars; i++) {
+        if ( !strcmp(shell->env_vars[i].name, name) ) {
+          strncpy(shell->env_vars[i].content, content, ENV_VAR_CONTENT_BUF_SIZE);
+          return true;
+        }
+    }
+    return false;
+}
+
+
 char* get_env_var_content(Shell *shell, char *name) {
     int i;
     for (i = 0; i < shell->qty_env_vars; i++) {
@@ -157,15 +184,17 @@ char* get_env_var_content(Shell *shell, char *name) {
 // COMANDOS DO SHELL
 
 static void ajuda(){
-    printf("----------AJUDA----------\n");
+    printf("\n----------AJUDA----------\n");
     printf("Uso: <comando> <parametro>\n\n");
     printf("Comandos:\n");
-    printf("ajuda\n");
-    printf("amb\n");
-    printf("<comando externo>\n");
-    printf("cd\n");
-    printf("limpa\n");
-    printf("sair\n");
+    printf("$ <comando_externo>\n");
+    printf("$ ajuda\n");
+    printf("$ amb\n");
+    printf("$ amb <variavel>\n");
+    printf("$ amb <variavel>=<valor>\n");
+    printf("$ cd <diretorio>\n");
+    printf("$ limpa\n");
+    printf("$ sair\n\n");
 }
 
 static void amb(Shell *shell) {
@@ -177,15 +206,15 @@ static void amb(Shell *shell) {
 
   // $ amb
   if (*(params) == '\0') {
-    // A impressão ainda será melhor formatada
     int index;
-    printf("\nVAR NAME | VAR CONTENT\n");
-    printf("----------------------\n");
+    printf("-----------------------------\n");
+    printf("%-10s | %-15s\n", "VAR NAME", "VAR CONTENT");
+    printf("-----------------------------\n");
     for (index = 0; index < shell->qty_env_vars; index++) {
-      printf("%s\t| ", shell->env_vars[index].name);
-      printf("%s\n", shell->env_vars[index].content);
+      printf("%-10s | ", shell->env_vars[index].name);
+      printf("%-15s\n", shell->env_vars[index].content);
     }
-    printf("----------------------\n");
+    printf("-----------------------------\n");
   }
   // $ amb $VAR
   else if (regex_match(env_var_content_patt, params)) {
@@ -194,15 +223,20 @@ static void amb(Shell *shell) {
     if (var_content == NULL)
       printf("Variavel de ambiente nao encontrada\n");
     else
-      printf("\n%s=%s\n", var_name, var_content);
+      printf("%s=%s\n", var_name, var_content);
   }
   // $ amb VAR=<value>
   else if (regex_match(set_env_var_patt, params)) {
     char *var_name = strtok(params, "=");
     char *var_content = strtok(NULL, "");
-    //printf("%s\n", var_content);
-    add_environment_variable(shell, var_name, var_content);
-    printf("Variavel de ambiente adicionada\n");
+    if (has_env_var(shell, var_name)) {
+      set_env_var_content(shell, var_name, var_content);
+      printf("Variavel de ambiente configurada\n");
+    }
+    else {
+      add_environment_variable(shell, var_name, var_content);
+      printf("Variavel de ambiente adicionada\n");
+    }
   }
   // Comando invalido
   else {
