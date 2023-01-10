@@ -55,8 +55,12 @@ void shell_setup(Shell *shell){
         exit(EXIT_FAILURE);
     }
     
+    char * temp_buffer = (char *) malloc(sizeof(strlen(hostname_buffer) + 1));
 
-    sprintf(prompt_buffer, "%s:%s$ ", hostname_buffer, getenv("HOME"));
+    strncpy(temp_buffer, hostname_buffer, strlen(hostname_buffer) + 1);
+    sprintf(prompt_buffer, "%s:%s$ ", temp_buffer, getenv("HOME"));
+
+    free(temp_buffer);
   
     add_environment_variable(shell, "HOST", hostname_buffer);
     add_environment_variable(shell, "PRONTO", prompt_buffer);
