@@ -24,10 +24,12 @@
 - Luiz Fernando
     - [ ] <>
 - Pedro Augusto
-    - [ ] comando `amb`
-    - [ ] comando `cd <diretório>` (problema a resolver)
+    - [ ] Comando `amb` (detalhes a serem finalizados)
+    - [ ] Comando `cd <diretório>` (problema a resolver)
+    - [ ] Executar comandos externos com fork() e exec()
+    - [ ] Histórico dos comandos executados em .meushell.hst
     - [x] shell_setup e shell_exit
-    - [x] criação e realocação de env_vars
+    - [x] Criação e realocação de env_vars
 
 <br>
 
