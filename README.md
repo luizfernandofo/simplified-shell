@@ -9,7 +9,7 @@
             - [x] `HOST`
             - [x] `PRONTO`
             - [x] `SHELL`
-    - [ ] `cd <diretório>`
+    - [x] `cd <diretório>`
     - [x] `limpa`
     - [x] `sair`
 - [ ] Ler configuração a partir do .meushell.rec
@@ -22,10 +22,10 @@
 
 ## Fazendo no momento
 - Luiz Fernando
-    - [ ] <>
+    - [x] Execução de comandos externos
+    - [x] comando `cd`
 - Pedro Augusto
     - [ ] Comando `amb` (detalhes a serem finalizados)
-    - [ ] Comando `cd <diretório>` (problema a resolver)
     - [ ] Histórico dos comandos executados em .meushell.hst
     - [x] shell_setup e shell_exit
     - [x] Criação e realocação de env_vars

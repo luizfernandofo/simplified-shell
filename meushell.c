@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "src/env_var.h"
 #include "src/shell.h"
@@ -15,12 +16,38 @@ int main(int argc, char const *argv[])
 
     char cmd_buff[COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE];
 
+    FILE *file = NULL;
+
     shell_setup(&shell);
 
     if(argc > 1){
-        // execução de arquivo passado por linha de comando
-        printf("Debug: Arquivo passado por linha de comando executado.\n");
+
+        if(strstr(argv[1], ".cmds")){
+
+            file = fopen(argv[1], "r");
+            
+            if(file == NULL){
+                printf("Arquivo %s nao existe.\nUso: ./meushell {nome_arquivo}.cmds\n", argv[1]);
+                return EXIT_FAILURE;
+            }
+
+
+            while(read_line(cmd_buff, file)){
+
+                split_command_buffer(cmd_buff, &shell);
+
+                eval_command(&shell);
+
+                shell_clear(&shell);
+
+                cmd_buff[0] = '\0';
+            }
+
+            fclose(file);
+        }
+
         return 0;
+
     }
 
     while(true){

@@ -55,3 +55,22 @@ void save_shell_env_vars(Shell *shell)
 void save_shell_command_history(Shell *shell)
 {
 }
+
+void remove_newline(char *ptr){
+  while (*ptr) {
+    if (*ptr == '\n')
+      *ptr = 0;
+    else
+      ptr++;
+  }
+}
+
+
+int read_line(char *line, FILE *file){
+    if(fgets(line, COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE, file) != NULL){
+        remove_newline(line);
+
+        return 1;
+    }
+    else return 0;
+}

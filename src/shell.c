@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <sys/stat.h>
 
 #include "definitions.h"
 #include "shell_record_manipulator.h"
@@ -45,6 +46,10 @@ void dump(void *p, int n) {
 
 }
 
+void shell_exit(Shell *shell) {
+    if (shell->env_vars) free(shell->env_vars);
+}
+
 void shell_setup(Shell *shell){
     char hostname_buffer[ENV_VAR_CONTENT_BUF_SIZE];
     char prompt_buffer[ENV_VAR_CONTENT_BUF_SIZE];
@@ -60,18 +65,15 @@ void shell_setup(Shell *shell){
     char * temp_buffer = (char *) malloc(sizeof(strlen(hostname_buffer) + 1));
 
     strncpy(temp_buffer, hostname_buffer, strlen(hostname_buffer) + 1);
-    sprintf(prompt_buffer, "%s:%s$ ", temp_buffer, getenv("HOME"));
+    sprintf(prompt_buffer, "%s:%s$ ", temp_buffer, getenv("PWD"));
 
     free(temp_buffer);
   
     add_environment_variable(shell, "HOST", hostname_buffer);
     add_environment_variable(shell, "PRONTO", prompt_buffer);
     add_environment_variable(shell, "SHELL", "simplified-shell");
-    add_environment_variable(shell, "DTA", getenv("HOME"));
-}
+    add_environment_variable(shell, "DTA", getenv("PWD"));
 
-void shell_exit(Shell *shell) {
-    if (shell->env_vars) free(shell->env_vars);
 }
 
 void shell_clear(Shell *shell) {
@@ -193,10 +195,10 @@ static void ajuda(){
     printf("\n----------AJUDA----------\n");
     printf("Uso: <comando> <parametro>\n\n");
     printf("Comandos:\n");
-    printf("$ <comando_externo>\n");
+    printf("$ <comando_externo> <param> <param> ...\n");
     printf("$ ajuda\n");
     printf("$ amb\n");
-    printf("$ amb <variavel>\n");
+    printf("$ amb $<variavel>\n");
     printf("$ amb <variavel>=<valor>\n");
     printf("$ cd <diretorio>\n");
     printf("$ limpa\n");
@@ -254,8 +256,26 @@ static void amb(Shell *shell) {
 }
 
 static void cd(Shell *shell){
-    // Sempre que a variável DTA for alterada, atualizar
-    // a variável PRONTO, de modo que PRONTO=“$DTA \> ”
+    
+	struct stat sb;
+
+	if(stat(shell->parametro, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+
+		set_env_var_content(shell, "DTA", shell->parametro);
+
+		if(chdir(shell->parametro)){
+
+			printf("Erro alterando working dir.\n");
+
+			shell_exit(shell);
+			
+			exit(EXIT_FAILURE);
+		}
+    }
+	else {
+        printf("O diretorio informado nao existe.\n");
+    }
+
     return;
 }
 
@@ -268,9 +288,32 @@ static void limpa(){
 
 static void executa_comando_externo(Shell *shell){
 
+	char *empty_string = "";
+	char path[31+1] = "/bin/";
+	char *params[32];
+	char *parametro = shell->parametro;
+	int i = 1;
+
+	params[0] = empty_string;
+
+	params[1] = strtok(parametro, " ");
+
+	while(params[i] && i < 32)
+	{
+		i++;
+
+		params[i] = strtok(NULL, " ");
+	}
+
+	strcat(path, shell->comando);
+
 	if(fork()==0){
-		if(execl( "/bin/ls", "-author", NULL) == -1){
-			printf("Erro ao executar comando externo.");
+		if(execv(path, params) == -1){
+
+			printf("%s: Comando nao encontrado.\n", shell->comando);
+
+			shell_exit(shell);
+			exit(EXIT_FAILURE);
 		}
 	}
     else{
