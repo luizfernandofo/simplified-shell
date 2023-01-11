@@ -23,6 +23,8 @@ static void cd(Shell *shell);
 
 static void limpa();
 
+static void executa_comando_externo(Shell *shell);
+
 // ===================================================
 
 // Função para DEBUG do conteúdo de memória de uma string
@@ -98,7 +100,7 @@ void eval_command(Shell *shell){
         exit(EXIT_SUCCESS);
     }
     else
-        printf("Execucao de comando externo.\n");
+        executa_comando_externo(shell);
 
     return;
 }
@@ -264,3 +266,14 @@ static void limpa(){
     return;
 }
 
+static void executa_comando_externo(Shell *shell){
+
+	if(fork()==0){
+		if(execl( "/bin/ls", "-author", NULL) == -1){
+			printf("Erro ao executar comando externo.");
+		}
+	}
+    else{
+		usleep(150000);
+    }
+}
