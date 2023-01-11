@@ -13,17 +13,16 @@
     - [x] `limpa`
     - [x] `sair`
 - [ ] Ler configuração a partir do .meushell.rec
-- [ ] Executar comandos externos com fork() e exec()
+- [x] Executar comandos externos com fork() e exec()
 - [ ] Histórico dos comandos executados em .meushell.hst
-- [ ] Executar comandos a partir de um arquivo de entrada
-- [ ] Conteúdo Extra
+- [x] Executar comandos a partir de um arquivo de entrada
+- [x] Conteúdo Extra (regex)
 
 <br>
 
 ## Fazendo no momento
 - Luiz Fernando
-    - [x] Execução de comandos externos
-    - [x] comando `cd`
+    - [ ]
 - Pedro Augusto
     - [ ] Comando `amb` (detalhes a serem finalizados)
     - [ ] Histórico dos comandos executados em .meushell.hst
