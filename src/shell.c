@@ -55,7 +55,7 @@ void shell_setup(Shell *shell){
     char prompt_buffer[ENV_VAR_CONTENT_BUF_SIZE];
 
     shell->env_vars = NULL;
-    shell->qty_env_vars = 0;
+    shell->env_vars_quantity = 0;
 
     if (gethostname(hostname_buffer, sizeof(hostname_buffer)) != 0) {
         printf("Erro ao obter o nome do host.");
@@ -98,6 +98,7 @@ void eval_command(Shell *shell){
         limpa();
 
     else if(strcmp(shell->comando, "sair") == 0 || strcmp(shell->comando, "exit") == 0){
+        save_shell_command_history(shell);
         shell_exit(shell);
         exit(EXIT_SUCCESS);
     }
@@ -145,20 +146,20 @@ void split_command_buffer(char *cmd_buff, Shell *shell) {
 }
 
 void add_environment_variable(Shell *shell, char *name, char *content) {
-    int quantity = shell->qty_env_vars;
+    int quantity = shell->env_vars_quantity;
 
     shell->env_vars = realloc_env_vars(shell->env_vars, quantity + 1);
 
     shell->env_vars[quantity] = new_env_var(name, content);
 
-    shell->qty_env_vars++;
+    shell->env_vars_quantity++;
 
     // Manipular o arquivo .meushell.rec
 }
 
 bool has_env_var(Shell *shell, char *name) {
     int i;
-    for (i = 0; i < shell->qty_env_vars; i++) {
+    for (i = 0; i < shell->env_vars_quantity; i++) {
         if ( !strcmp(shell->env_vars[i].name, name) ) 
             return true;
     }
@@ -168,7 +169,7 @@ bool has_env_var(Shell *shell, char *name) {
 
 bool set_env_var_content(Shell *shell, char *name, char *content) {
     int i;
-    for (i = 0; i < shell->qty_env_vars; i++) {
+    for (i = 0; i < shell->env_vars_quantity; i++) {
         if ( !strcmp(shell->env_vars[i].name, name) ) {
           strncpy(shell->env_vars[i].content, content, ENV_VAR_CONTENT_BUF_SIZE);
           return true;
@@ -180,7 +181,7 @@ bool set_env_var_content(Shell *shell, char *name, char *content) {
 
 char* get_env_var_content(Shell *shell, char *name) {
     int i;
-    for (i = 0; i < shell->qty_env_vars; i++) {
+    for (i = 0; i < shell->env_vars_quantity; i++) {
         if ( !strcmp(shell->env_vars[i].name, name) ) 
             return shell->env_vars[i].content;
     }
@@ -218,7 +219,7 @@ static void amb(Shell *shell) {
     printf("-----------------------------\n");
     printf("%-10s | %-15s\n", "VAR NAME", "VAR CONTENT");
     printf("-----------------------------\n");
-    for (index = 0; index < shell->qty_env_vars; index++) {
+    for (index = 0; index < shell->env_vars_quantity; index++) {
       printf("%-10s | ", shell->env_vars[index].name);
       printf("%-15s\n", shell->env_vars[index].content);
     }

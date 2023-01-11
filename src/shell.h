@@ -24,7 +24,7 @@ typedef struct Shell{
 
     EnvironmentVariable* env_vars;
 
-    int qty_env_vars;
+    int env_vars_quantity;
 
 } Shell;
 

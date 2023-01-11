@@ -52,8 +52,38 @@ void save_shell_env_vars(Shell *shell)
 {
 }
 
-void save_shell_command_history(Shell *shell)
-{
+void save_shell_command_history(Shell *shell) {
+  const int _hst_file_line_size_ = COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE + 1;
+  FILE * command_history_file = fopen(_shell_hst_filename, "r+");
+
+  char command_buffer[_hst_file_line_size_];
+  char line_buffer[_hst_file_line_size_], last_line[_hst_file_line_size_];
+
+  if (!command_history_file) {
+    printf("Erro ao abrir o arquivo de historico de comandos.\n");
+    exit(EXIT_FAILURE);
+  }
+  
+  sprintf(command_buffer, "%s %s", shell->comando, shell->parametro);
+
+  last_line[0] = '\0';
+
+  while (fgets(line_buffer, sizeof(line_buffer), command_history_file)) {
+    strncpy(last_line, line_buffer, _hst_file_line_size_);
+  }
+  
+  if (last_line[0] == '\0') {
+    fprintf(command_history_file, "%s\n", command_buffer);
+  }
+  else {
+    last_line[ strlen(last_line) - 1 ] = '\0';
+    if (strcmp(last_line, command_buffer) != 0) {
+      fprintf(command_history_file, "%s\n", command_buffer);
+    }
+  }
+
+
+  fclose(command_history_file);
 }
 
 void remove_newline(char *ptr){
