@@ -4,7 +4,7 @@
 - [ ] Comandos internos
     - [x] `ajuda`
     - [ ] `amb`
-        - [ ] `amb $VAR`
+        - [x] `amb $VAR`
         - [ ] `amb VAR=<valor>`
             - [x] `HOST`
             - [x] `PRONTO`
@@ -16,7 +16,8 @@
 - [x] Executar comandos externos com fork() e exec()
 - [ ] Histórico dos comandos executados em .meushell.hst
 - [x] Executar comandos a partir de um arquivo de entrada
-- [x] Conteúdo Extra (regex)
+- [x] Conteúdo Extra
+    - regex
 
 <br>
 
@@ -25,7 +26,7 @@
     - [ ]
 - Pedro Augusto
     - [ ] Comando `amb` (detalhes a serem finalizados)
-    - [x] Histórico dos comandos executados em .meushell.hst
+    - [x] Histórico dos comandos executados em .meushell.hst (conferir)
 
 <br>
 
