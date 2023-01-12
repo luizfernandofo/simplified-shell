@@ -25,9 +25,7 @@
     - [ ]
 - Pedro Augusto
     - [ ] Comando `amb` (detalhes a serem finalizados)
-    - [ ] Histórico dos comandos executados em .meushell.hst
-    - [x] shell_setup e shell_exit
-    - [x] Criação e realocação de env_vars
+    - [x] Histórico dos comandos executados em .meushell.hst
 
 <br>
 
