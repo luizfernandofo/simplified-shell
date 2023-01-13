@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 static const char* _shell_rec_filename = ".meushell.rec";
-static const char* _shell_hst_filename = ".meushell.hst";
+static const char* _shell_hst_filename = "/.meushell.hst";
 
 
 EnvironmentVariable *load_shell_env_vars()
@@ -53,15 +53,32 @@ void save_shell_env_vars(Shell *shell)
 }
 
 void save_shell_command_history(Shell *shell) {
+
   const int _hst_file_line_size_ = COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE + 1;
-  FILE * command_history_file = fopen(_shell_hst_filename, "r+");
+
+	char file_path[1024];
+
+	// Make use of a absolute path to save the history and prevent errors due to chdir() calls.
+	stpcpy(file_path, shell->first_opened_working_dir);
+
+	strcat(file_path, _shell_hst_filename);
+	// ----
+
+  FILE * command_history_file = fopen(file_path, "r+");
 
   char command_buffer[_hst_file_line_size_];
   char line_buffer[_hst_file_line_size_], last_line[_hst_file_line_size_];
 
-  if (!command_history_file) {
-    printf("Erro ao abrir o arquivo de historico de comandos.\n");
-    exit(EXIT_FAILURE);
+  if (command_history_file == NULL) {
+
+    command_history_file = fopen(file_path, "w+");
+
+	if (command_history_file == NULL) {
+
+		printf("Erro ao abrir o arquivo de historico de comandos.\n");
+		exit(EXIT_FAILURE);
+
+	}
   }
   
   sprintf(command_buffer, "%s %s", shell->comando, shell->parametro);
@@ -81,7 +98,6 @@ void save_shell_command_history(Shell *shell) {
       fprintf(command_history_file, "%s\n", command_buffer);
     }
   }
-
 
   fclose(command_history_file);
 }
