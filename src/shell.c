@@ -81,6 +81,8 @@ void shell_setup(Shell *shell){
     add_environment_variable(shell, "SHELL", "simplified-shell");
     add_environment_variable(shell, "DTA", getenv("PWD"));
 
+    strcpy(shell->first_opened_working_dir, get_env_var_content(shell, "DTA"));
+
 }
 
 void shell_clear(Shell *shell) {

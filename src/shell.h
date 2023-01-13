@@ -26,6 +26,8 @@ typedef struct Shell{
 
     int env_vars_quantity;
 
+    char first_opened_working_dir[1024];
+
 } Shell;
 
 
