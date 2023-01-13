@@ -38,6 +38,8 @@ int main(int argc, char const *argv[])
 
                 eval_command(&shell);
 
+                save_shell_command_history(&shell);
+
                 shell_clear(&shell);
 
                 cmd_buff[0] = '\0';
@@ -49,7 +51,7 @@ int main(int argc, char const *argv[])
         return 0;
 
     }
-
+    
     while(true){
 
         // nome exibido pelo shell imediatamente antes do cursor
