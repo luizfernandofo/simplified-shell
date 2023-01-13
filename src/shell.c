@@ -11,6 +11,13 @@
 #include "shell_record_manipulator.h"
 #include "regex_lib.h"
 
+// REGEX PATTERNS
+const char *_env_var_content_patt_ = "^\\$[a-zA-Z]+$";
+const char * _full_set_env_var_patt_ = "^amb[ ][A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
+const char *_set_env_var_patt_ = "^[a-zA-Z]+\\=[a-zA-Z]+$";
+const char *_spaced_set_env_var_patt_ = "^[A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
+
+
 
 // ===================================================
 
@@ -119,9 +126,23 @@ void read_string(char *str) {
 }
 
 void split_command_buffer(char *cmd_buff, Shell *shell) {
-  // char token[COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE];
 
-  // strncpy(token, cmd_buff, (COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE));
+  // strcpy
+  
+  if (regex_match(_full_set_env_var_patt_, cmd_buff)) {
+
+    int i = 0;
+    while (true) {
+        cmd_buff[i] = cmd_buff[i + 4];
+        if (cmd_buff[i + 4] == '\0') break;
+        i++;
+    }
+
+    strncpy(shell->comando, "amb", COMMAND_BUF_SIZE);
+    strncpy(shell->parametro, cmd_buff, PARAMETERS_BUF_SIZE);
+
+    return;
+  }
 
   char *token = cmd_buff;
 
@@ -207,11 +228,10 @@ static void ajuda(){
 }
 
 static void amb(Shell *shell) {
-  const char *env_var_content_patt = "^\\$[a-zA-Z]+$";
-  const char *set_env_var_patt = "^[a-zA-Z]+\\=[a-zA-Z]+$";
-
+  // const char *env_var_content_patt = "^\\$[a-zA-Z]+$";
+  // const char *set_env_var_patt = "^[a-zA-Z]+\\=[a-zA-Z]+$";
   char *params = shell->parametro;
-
+  bool match1, match2;
 
   // $ amb
   if (*(params) == '\0') {
@@ -226,7 +246,7 @@ static void amb(Shell *shell) {
     printf("-----------------------------\n");
   }
   // $ amb $VAR
-  else if (regex_match(env_var_content_patt, params)) {
+  else if (regex_match(_env_var_content_patt_, params)) {
     char *var_name = strtok(params, "$");
     char *var_content = get_env_var_content(shell, var_name);
     if (var_content == NULL)
@@ -235,9 +255,12 @@ static void amb(Shell *shell) {
       printf("%s=%s\n", var_name, var_content);
   }
   // $ amb VAR=<value>
-  else if (regex_match(set_env_var_patt, params)) {
+  else if ( (match1 = regex_match(_set_env_var_patt_, params)) || 
+              (match2 = regex_match(_spaced_set_env_var_patt_, params)) ) {
+
     char *var_name = strtok(params, "=");
-    char *var_content = strtok(NULL, "");
+    char *var_content = strtok(NULL, (match1 ? "" : "\""));
+
     if (has_env_var(shell, var_name)) {
       set_env_var_content(shell, var_name, var_content);
       printf("Variavel de ambiente configurada\n");

@@ -3,9 +3,9 @@
 ## Lista de afazeres
 - [ ] Comandos internos
     - [x] `ajuda`
-    - [ ] `amb`
+    - [x] `amb`
         - [x] `amb $VAR`
-        - [ ] `amb VAR=<valor>`
+        - [x] `amb VAR=<valor>`
             - [x] `HOST`
             - [x] `PRONTO`
             - [x] `SHELL`
@@ -25,7 +25,7 @@
 - Luiz Fernando
     - [ ]
 - Pedro Augusto
-    - [ ] Comando `amb` (detalhes a serem finalizados)
+    - [x] Comando `amb`
     - [x] Histórico dos comandos executados em .meushell.hst (conferir)
 
 <br>
