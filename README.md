@@ -1,7 +1,7 @@
 # Simplified Shell
 
 ## Lista de afazeres
-- [ ] Comandos internos
+- [x] Comandos internos
     - [x] `ajuda`
     - [x] `amb`
         - [x] `amb $VAR`
@@ -14,7 +14,7 @@
     - [x] `sair`
 - [ ] Ler configuração a partir do .meushell.rec
 - [x] Executar comandos externos com fork() e exec()
-- [ ] Histórico dos comandos executados em .meushell.hst
+- [x] Histórico dos comandos executados em .meushell.hst
 - [x] Executar comandos a partir de um arquivo de entrada
 - [x] Conteúdo Extra
     - regex
@@ -26,7 +26,6 @@
     - [ ]
 - Pedro Augusto
     - [x] Comando `amb`
-    - [x] Histórico dos comandos executados em .meushell.hst (conferir)
 
 <br>
 
