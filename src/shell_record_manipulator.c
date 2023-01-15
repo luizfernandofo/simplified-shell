@@ -71,7 +71,7 @@ void save_shell_command_history(Shell *shell) {
 
   if (command_history_file == NULL) {
 
-    command_history_file = fopen(file_path, "w+");
+  command_history_file = fopen(file_path, "w+");
 
 	if (command_history_file == NULL) {
 

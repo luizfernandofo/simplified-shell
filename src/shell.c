@@ -11,26 +11,65 @@
 #include "shell_record_manipulator.h"
 #include "regex_lib.h"
 
-// REGEX PATTERNS
-const char *_env_var_content_patt_ = "^\\$[a-zA-Z]+$";
-const char * _full_set_env_var_patt_ = "^amb[ ][A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
-const char *_set_env_var_patt_ = "^[a-zA-Z]+\\=[a-zA-Z]+$";
-const char *_spaced_set_env_var_patt_ = "^[A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
+// ===================================================
 
+// PADRÕES DE REGEX
+
+// Padrão do conteúdo de uma variável de ambiente
+const char *_env_var_content_patt_ = "^\\$[a-zA-Z]+$";
+
+// Padrão do comando de configuração de uma variável de ambiente
+// amb <var_name>="<spaced_content>"
+const char * _full_set_env_var_patt_ = "^amb[ ][A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
+
+// Padrão do parâmetro de configuração de uma variável de ambiente (conteúdo sem espaços)
+// <var_name>=<content>
+const char *_set_env_var_patt_ = "^[a-zA-Z]+\\=[a-zA-Z]+$";
+
+// Padrão do parâmetro de configuração de uma variável de ambiente (conteúdo com espaços)
+// <var_name>="<spaced_content>"
+const char *_spaced_set_env_var_patt_ = "^[A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
 
 
 // ===================================================
 
-// COMANDOS DO SHELL
+// COMANDOS DO SHELL - Definição
 
+/**
+ * @brief Exibe o manual de uso do shell
+ * 
+ */
 static void ajuda();
 
+
+/**
+ * @brief Gerencia as variáves de ambiente do shell
+ * 
+ * @param shell 
+ */
 static void amb(Shell *shell);
 
+
+/**
+ * @brief Muda para o diretório <dir> atualizando o DTA
+ * 
+ * @param shell 
+ */
 static void cd(Shell *shell);
 
+
+/**
+ * @brief Limpa o terminal
+ * 
+ */
 static void limpa();
 
+
+/**
+ * @brief Executa um comando externo
+ * 
+ * @param shell 
+ */
 static void executa_comando_externo(Shell *shell);
 
 // ===================================================
@@ -53,9 +92,11 @@ void dump(void *p, int n) {
 
 }
 
+
 void shell_exit(Shell *shell) {
     if (shell->env_vars) free(shell->env_vars);
 }
+
 
 void shell_setup(Shell *shell){
     char hostname_buffer[ENV_VAR_CONTENT_BUF_SIZE];
@@ -85,10 +126,12 @@ void shell_setup(Shell *shell){
 
 }
 
+
 void shell_clear(Shell *shell) {
   shell->comando[0] = '\0';
   shell->parametro[0] = '\0';
 }
+
 
 void eval_command(Shell *shell){
 
@@ -107,6 +150,7 @@ void eval_command(Shell *shell){
         limpa();
 
     else if(strcmp(shell->comando, "sair") == 0 || strcmp(shell->comando, "exit") == 0){
+        // Encerra e sai do shell
         save_shell_command_history(shell);
         shell_exit(shell);
         exit(EXIT_SUCCESS);
@@ -117,6 +161,7 @@ void eval_command(Shell *shell){
     return;
 }
 
+
 void read_string(char *str) {
   int i = 0;
   char c;
@@ -126,6 +171,7 @@ void read_string(char *str) {
   }
   str[i] = '\0';
 }
+
 
 void split_command_buffer(char *cmd_buff, Shell *shell) {
 
@@ -168,6 +214,7 @@ void split_command_buffer(char *cmd_buff, Shell *shell) {
 
 }
 
+
 void add_environment_variable(Shell *shell, char *name, char *content) {
     int quantity = shell->env_vars_quantity;
 
@@ -179,6 +226,7 @@ void add_environment_variable(Shell *shell, char *name, char *content) {
 
     // Manipular o arquivo .meushell.rec
 }
+
 
 bool has_env_var(Shell *shell, char *name) {
     int i;
@@ -213,7 +261,7 @@ char* get_env_var_content(Shell *shell, char *name) {
 
 // ===================================================
 
-// COMANDOS DO SHELL
+// COMANDOS DO SHELL - Implementação
 
 static void ajuda(){
     printf("\n----------AJUDA----------\n");
@@ -228,6 +276,7 @@ static void ajuda(){
     printf("$ limpa\n");
     printf("$ sair\n\n");
 }
+
 
 static void amb(Shell *shell) {
   // const char *env_var_content_patt = "^\\$[a-zA-Z]+$";
@@ -281,6 +330,7 @@ static void amb(Shell *shell) {
   return;
 }
 
+
 static void cd(Shell *shell){
     
 	struct stat sb;
@@ -305,12 +355,14 @@ static void cd(Shell *shell){
     return;
 }
 
+
 static void limpa(){
 
     system("clear");
 
     return;
 }
+
 
 static void executa_comando_externo(Shell *shell){
 

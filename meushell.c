@@ -11,15 +11,18 @@
 
 int main(int argc, char const *argv[])
 {
-    
+
     Shell shell;
 
+    // Buffer que armazena a linha de comando (comando e seus parâmetros)
     char cmd_buff[COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE];
 
     FILE *file = NULL;
 
+    // Inicialização do shell
     shell_setup(&shell);
 
+    // Leitura do arquivo de extensão .cmds para a execução dos comandos
     if(argc > 1){
 
         if(strstr(argv[1], ".cmds")){
@@ -51,22 +54,29 @@ int main(int argc, char const *argv[])
         return 0;
 
     }
-    
+
+    // Shell como um terminal interativo
     while(true){
 
-        // nome exibido pelo shell imediatamente antes do cursor
+        // Nome exibido pelo shell imediatamente antes do cursor
         printf("%s", shell.env_vars[1].content);
 
+        // Leitura da linha de comando pelo teclado
         read_string(cmd_buff);
 
+        // Separação do comando de seus parâmetros
         split_command_buffer(cmd_buff, &shell);
 
+        // Análise do comando informado
         eval_command(&shell);
 
+        // Salvamento do comando no histórico
         save_shell_command_history(&shell);
 
+        // Reinicialização/limpeza do shell
         shell_clear(&shell);
 
+        // Limpeza do buffer da linha de comando
         cmd_buff[0] = '\0';
     }
     
