@@ -7,7 +7,8 @@
 #include <stdio.h>
 
 /**
- * @brief 
+ * @brief Lê a configuração a partir do arquivo .meushell.rec, 
+ * no qual as variáveis de ambiente podem ser inicialmente configuradas
  * 
  * @param shell 
  */
