@@ -3,6 +3,7 @@
 
 #include "env_var.h"
 #include "definitions.h"
+#include <stdbool.h>
 
 /**
  * Shell deve conter os seguintes comandos:

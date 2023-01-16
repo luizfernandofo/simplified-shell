@@ -279,9 +279,8 @@ static void ajuda(){
 
 
 static void amb(Shell *shell) {
-  // const char *env_var_content_patt = "^\\$[a-zA-Z]+$";
-  // const char *set_env_var_patt = "^[a-zA-Z]+\\=[a-zA-Z]+$";
-  char *params = shell->parametro;
+  char params[PARAMETERS_BUF_SIZE];
+  strncpy(params, shell->parametro, PARAMETERS_BUF_SIZE);
   bool match1, match2;
 
   // $ amb
