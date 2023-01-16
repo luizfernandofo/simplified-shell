@@ -12,12 +12,13 @@
     - [x] `cd <diretório>`
     - [x] `limpa`
     - [x] `sair`
-- [ ] Ler configuração a partir do .meushell.rec
+- [x] Ler configuração a partir do .meushell.rec
 - [x] Executar comandos externos com fork() e exec()
 - [x] Histórico dos comandos executados em .meushell.hst
 - [x] Executar comandos a partir de um arquivo de entrada
 - [x] Conteúdo Extra
     - regex
+- [ ] Revisar o código, as funcionalidades e a documentação
 
 <br>
 
@@ -25,14 +26,5 @@
 - Luiz Fernando
     - [ ]
 - Pedro Augusto
-    - [x] Comando `amb`
+    - [ ]
 
-<br>
-
-## Questões
-- DTA deve ser uma variavel de ambiente?
-    - Se for o caso, deve ser inserida em env_vars
-- Definir um formato para PRONTO
-    - `“$DTA \> ”`
-    - `“/DTA~$ ”`
-    - ...
