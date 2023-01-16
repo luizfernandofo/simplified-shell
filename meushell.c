@@ -22,6 +22,9 @@ int main(int argc, char const *argv[])
     // Inicialização do shell
     shell_setup(&shell);
 
+    // Leitura da configuração inicial das variáveis de ambiente a partir do arquivo .meushell.rec
+    load_shell_env_vars(&shell);
+
     // Leitura do arquivo de extensão .cmds para a execução dos comandos
     if(argc > 1){
 

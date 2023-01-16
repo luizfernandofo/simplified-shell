@@ -9,9 +9,9 @@
 /**
  * @brief 
  * 
- * @return EnvironmentVariable* 
+ * @param shell 
  */
-EnvironmentVariable* load_shell_env_vars();
+void load_shell_env_vars(Shell *shell);
 
 
 /**

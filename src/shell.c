@@ -16,19 +16,19 @@
 // PADRÕES DE REGEX
 
 // Padrão do conteúdo de uma variável de ambiente
-const char *_env_var_content_patt_ = "^\\$[a-zA-Z]+$";
+const char *_env_var_get_content_patt_ = "^\\$[a-zA-Z]+$";
 
 // Padrão do comando de configuração de uma variável de ambiente
 // amb <var_name>="<spaced_content>"
-const char * _full_set_env_var_patt_ = "^amb[ ][A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
+const char * _full_set_env_var_patt_ = "^amb[ ][A-Za-z]+=\\\"[^\n\\\"]+\\\"$";
 
 // Padrão do parâmetro de configuração de uma variável de ambiente (conteúdo sem espaços)
 // <var_name>=<content>
-const char *_set_env_var_patt_ = "^[a-zA-Z]+\\=[a-zA-Z]+$";
+const char *_set_env_var_patt_ = "^[a-zA-Z]+\\=[^\n \\\"]+$";
 
 // Padrão do parâmetro de configuração de uma variável de ambiente (conteúdo com espaços)
 // <var_name>="<spaced_content>"
-const char *_spaced_set_env_var_patt_ = "^[A-Za-z]+=\\\"[A-Za-z ]+\\\"$";
+const char *_spaced_set_env_var_patt_ = "^[A-Za-z]+=\\\"[^\n\\\"]+\\\"$";
 
 
 // ===================================================
@@ -93,11 +93,6 @@ void dump(void *p, int n) {
 }
 
 
-void shell_exit(Shell *shell) {
-    if (shell->env_vars) free(shell->env_vars);
-}
-
-
 void shell_setup(Shell *shell){
     char hostname_buffer[ENV_VAR_CONTENT_BUF_SIZE];
     char prompt_buffer[ENV_VAR_CONTENT_BUF_SIZE];
@@ -124,6 +119,11 @@ void shell_setup(Shell *shell){
 
     strcpy(shell->first_opened_working_dir, get_env_var_content(shell, "DTA"));
 
+}
+
+
+void shell_exit(Shell *shell) {
+    if (shell->env_vars) free(shell->env_vars);
 }
 
 
@@ -296,7 +296,7 @@ static void amb(Shell *shell) {
     printf("-----------------------------\n");
   }
   // $ amb $VAR
-  else if (regex_match(_env_var_content_patt_, params)) {
+  else if (regex_match(_env_var_get_content_patt_, params)) {
     char *var_name = strtok(params, "$");
     char *var_content = get_env_var_content(shell, var_name);
     if (var_content == NULL)

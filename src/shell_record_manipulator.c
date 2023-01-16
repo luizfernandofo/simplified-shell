@@ -2,55 +2,61 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "definitions.h"
 #include <stdlib.h>
+#include <stdbool.h>
+#include "regex_lib.h"
+#include "definitions.h"
+#include "shell.h"
 
 static const char* _shell_rec_filename = ".meushell.rec";
 static const char* _shell_hst_filename = "/.meushell.hst";
 
 
-EnvironmentVariable *load_shell_env_vars()
-{
-    EnvironmentVariable *env_var = NULL;
-
+void load_shell_env_vars(Shell *shell) {
     FILE *shell_rec_file = NULL;
+    const int _rec_file_line_size_ = PARAMETERS_BUF_SIZE;
+    char line_buffer[_rec_file_line_size_], current_line[_rec_file_line_size_];
 
-    long int file_size = 0;
-     
-    unsigned int qtd_env_vars = 0;
-
-    shell_rec_file = fopen(_shell_rec_filename, "r+");
+    shell_rec_file = fopen(_shell_rec_filename, "r");
     
-    if(shell_rec_file == NULL){
-        return NULL;    
+    if (shell_rec_file == NULL){
+        printf("Erro ao abrir o arquivo %s\n", _shell_rec_filename);
+        exit(EXIT_FAILURE);   
     }
 
-    fseek(shell_rec_file, 0, SEEK_END);
+  bool set_env_var_match, spaced_set_env_var_match;
+  while (fgets(line_buffer, sizeof(line_buffer), shell_rec_file)) {
+    if (regex_match("^[ \n]*$", line_buffer)) continue;
 
-    file_size = ftell(shell_rec_file);
+    if (line_buffer[ strlen(line_buffer) - 1 ] == '\n')
+      line_buffer[ strlen(line_buffer) - 1 ] = '\0';
+    
+    if ( (set_env_var_match = regex_match("^[a-zA-Z]+\\=[^\n \\\"]+$", line_buffer)) || 
+              (spaced_set_env_var_match = regex_match("^[A-Za-z]+=\\\"[^\n]+\\\"$", line_buffer)) ) {
 
-    qtd_env_vars = (unsigned int) file_size/sizeof(EnvironmentVariable);
+      char *var_name = strtok(line_buffer, "=");
+      char *var_content = strtok(NULL, (set_env_var_match ? "" : "\""));
 
-    env_var = (EnvironmentVariable *) malloc(file_size);
-
-    if(env_var == NULL){
-        printf("Erro alocando memoria.\n");
-        exit(EXIT_FAILURE);
+      if (has_env_var(shell, var_name)) 
+        set_env_var_content(shell, var_name, var_content);
+      else 
+        add_environment_variable(shell, var_name, var_content);
     }
-
-    fseek(shell_rec_file, 0, SEEK_SET);
-
-    int fread_return = fread((void *) env_var, sizeof(EnvironmentVariable), qtd_env_vars, shell_rec_file);
+    else {
+      printf("Erro no conteudo de .meushell.rec\n");
+      exit(EXIT_FAILURE);
+    }
+  }
 
     fclose(shell_rec_file);
 
-    return env_var;
-
 }
+
 
 void save_shell_env_vars(Shell *shell)
 {
 }
+
 
 void save_shell_command_history(Shell *shell) {
 
@@ -101,6 +107,7 @@ void save_shell_command_history(Shell *shell) {
 
   fclose(command_history_file);
 }
+
 
 void remove_newline(char *ptr){
   while (*ptr) {
