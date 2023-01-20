@@ -53,11 +53,6 @@ void load_shell_env_vars(Shell *shell) {
 }
 
 
-void save_shell_env_vars(Shell *shell)
-{
-}
-
-
 void save_shell_command_history(Shell *shell) {
 
   const int _hst_file_line_size_ = COMMAND_BUF_SIZE + PARAMETERS_BUF_SIZE + 1;

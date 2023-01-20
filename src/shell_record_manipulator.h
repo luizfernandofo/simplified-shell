@@ -16,14 +16,6 @@ void load_shell_env_vars(Shell *shell);
 
 
 /**
- * @brief 
- * 
- * @param shell 
- */
-void save_shell_env_vars(Shell* shell);
-
-
-/**
  * @brief Salva os comandos utilizados em um histórico, um
  * arquivo de texto nomeado .meushell.hst
  * 
@@ -33,7 +25,7 @@ void save_shell_command_history(Shell* shell);
 
 
 /**
- * @brief 
+ * @brief Remove o '\n' de uma string.
  * 
  * @param ptr 
  */
@@ -41,7 +33,7 @@ void remove_newline(char *ptr);
 
 
 /**
- * @brief 
+ * @brief Lê uma linha de um arquivo de texto.
  * 
  * @param line 
  * @param file 
