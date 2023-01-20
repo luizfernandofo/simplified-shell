@@ -20,8 +20,8 @@ void load_shell_env_vars(Shell *shell) {
     shell_rec_file = fopen(_shell_rec_filename, "r");
     
     if (shell_rec_file == NULL){
-        printf("Erro ao abrir o arquivo %s\n", _shell_rec_filename);
-        exit(EXIT_FAILURE);   
+        printf("Arquivo %s inexistente, variaveis de ambiente setadas como default.\n", _shell_rec_filename);
+        return;   
     }
 
   bool set_env_var_match, spaced_set_env_var_match;
