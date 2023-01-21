@@ -18,13 +18,4 @@
 - [x] Executar comandos a partir de um arquivo de entrada
 - [x] Conteúdo Extra
     - regex
-- [ ] Revisar o código, as funcionalidades e a documentação
-
-<br>
-
-## Fazendo no momento
-- Luiz Fernando
-    - [ ]
-- Pedro Augusto
-    - [ ]
-
+- [x] Revisar o código, as funcionalidades e a documentação

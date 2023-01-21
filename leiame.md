@@ -16,3 +16,6 @@ gcc *.c src/*.c -o meushell
 ```bash
 ./meushell
 ```
+
+### Repositório
+- Link para o Repositório no GitHub: https://github.com/luizfernandofo/simplified-shell
