@@ -43,7 +43,11 @@ void load_shell_env_vars(Shell *shell) {
         add_environment_variable(shell, var_name, var_content);
     }
     else {
-      printf("Erro no conteudo de .meushell.rec\n");
+
+      printf("Erro no conteudo de .meushell.rec.\n\n");
+
+      printf("Uso:\n\nNOME=conteudo_sem_espaco\nNOME=\"conteudo com espacos\"\nPRONTO=\"$PWD /> \"\n\n");
+
       exit(EXIT_FAILURE);
     }
   }
