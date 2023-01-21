@@ -174,8 +174,6 @@ void read_string(char *str) {
 
 
 void split_command_buffer(char *cmd_buff, Shell *shell) {
-
-  // strcpy
   
   if (regex_match(_full_set_env_var_patt_, cmd_buff)) {
 
@@ -224,7 +222,6 @@ void add_environment_variable(Shell *shell, char *name, char *content) {
 
     shell->env_vars_quantity++;
 
-    // Manipular o arquivo .meushell.rec
 }
 
 
@@ -375,7 +372,6 @@ static void amb(Shell *shell) {
   // Comando invalido
   else {
     printf("Comando invalido\n");
-    //exit(EXIT_FAILURE); // Temporário
   }
 
   return;

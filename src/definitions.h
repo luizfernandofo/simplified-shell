@@ -7,8 +7,6 @@
 // Tamanho do buffer dos parâmetros do comando
 #define PARAMETERS_BUF_SIZE 127+1
 
-#define DTA_BUF_SIZE 127+1 // remover
-
 // Tamanho do buffer do nome de uma variável de ambiente
 #define ENV_VAR_NAME_BUF_SIZE 31+1
 
