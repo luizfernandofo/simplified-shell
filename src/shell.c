@@ -343,11 +343,18 @@ static void amb(Shell *shell) {
   // $ amb $VAR
   else if (regex_match(_env_var_get_content_patt_, params)) {
     char *var_name = strtok(params, "$");
-    char *var_content = get_env_var_content(shell, var_name);
-    if (var_content == NULL)
+    char *var_content = NULL;
+    if (!has_env_var(shell, var_name))
       printf("Variavel de ambiente nao encontrada\n");
-    else
-      printf("%s=%s\n", var_name, var_content);
+    else{
+      for(int i=0; i < shell->env_vars_quantity; i++){
+        if(strcmp(var_name, shell->env_vars[i].name) == 0){
+          printf("%s=%s\n", var_name, shell->env_vars[i].content);
+          break;
+        }
+      }
+    }
+      
   }
   // $ amb VAR=<value>
   else if ( (match1 = regex_match(_set_env_var_patt_, params)) || 
