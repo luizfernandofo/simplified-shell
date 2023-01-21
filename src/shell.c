@@ -100,7 +100,7 @@ void shell_setup(Shell *shell){
     shell->env_vars = NULL;
     shell->env_vars_quantity = 0;
 
-    if (gethostname(hostname_buffer, sizeof(hostname_buffer)) != 0) {
+    if (gethostname(hostname_buffer, ENV_VAR_CONTENT_BUF_SIZE) != 0){
         printf("Erro ao obter o nome do host.");
         exit(EXIT_FAILURE);
     }
@@ -108,12 +108,12 @@ void shell_setup(Shell *shell){
     char * temp_buffer = (char *) malloc(sizeof(strlen(hostname_buffer) + 1));
 
     strncpy(temp_buffer, hostname_buffer, strlen(hostname_buffer) + 1);
-    sprintf(prompt_buffer, "%s:%s$ ", temp_buffer, getenv("PWD"));
+    //sprintf(prompt_buffer, "%s:%s$ ", temp_buffer, getenv("PWD"));
 
     free(temp_buffer);
   
     add_environment_variable(shell, "HOST", hostname_buffer);
-    add_environment_variable(shell, "PRONTO", prompt_buffer);
+    add_environment_variable(shell, "PRONTO", "$DTA /> ");
     add_environment_variable(shell, "SHELL", "simplified-shell");
     add_environment_variable(shell, "DTA", getenv("PWD"));
 
@@ -251,10 +251,55 @@ bool set_env_var_content(Shell *shell, char *name, char *content) {
 
 
 char* get_env_var_content(Shell *shell, char *name) {
-    int i;
-    for (i = 0; i < shell->env_vars_quantity; i++) {
-        if ( !strcmp(shell->env_vars[i].name, name) ) 
-            return shell->env_vars[i].content;
+    int i, j, k, l;
+    char *temp_ptr = NULL;
+    char temp_buff[1024];
+    char var[256];
+
+    //shell->env_var_content_resolved_buffer[0] = '\0';
+
+    for(i = 0; i < shell->env_vars_quantity; i++) {
+        if ( !strcmp(shell->env_vars[i].name, name) ){
+          
+          temp_ptr = shell->env_vars[i].content;
+
+          // Verifica se há variáveis de ambiente no content
+          for(j = 0; j < ENV_VAR_CONTENT_BUF_SIZE && temp_ptr[j] != '\0'; j++){
+
+            if(temp_ptr[j] == '$'){
+
+              strncpy(temp_buff, temp_ptr, j);
+              
+              temp_buff[j] = '\0';
+
+              for(l = j + 1, k = 0; l < ENV_VAR_CONTENT_BUF_SIZE && temp_ptr[l] != '\0' && k < 256; l++, k++){
+
+                if(temp_ptr[l] == ' '){
+                  break;
+                }
+                var[k] = temp_ptr[l];
+              }
+
+              var[k] = '\0';
+              
+              temp_ptr += l;
+              
+              if(has_env_var(shell, var)){
+                strcat(temp_buff, get_env_var_content(shell, var));
+              }
+
+              strcat(temp_buff, temp_ptr);
+
+              strcpy(shell->env_var_content_resolved_buffer, temp_buff);
+
+              return shell->env_var_content_resolved_buffer;
+            }
+          }
+
+          return shell->env_vars[i].content;
+          
+        } 
+            
     }
     return NULL;
 }
@@ -334,9 +379,9 @@ static void cd(Shell *shell){
     
 	struct stat sb;
 
-	if(stat(shell->parametro, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+  char cwd[ENV_VAR_CONTENT_BUF_SIZE];
 
-		set_env_var_content(shell, "DTA", shell->parametro);
+	if(stat(shell->parametro, &sb) == 0 && S_ISDIR(sb.st_mode)) {
 
 		if(chdir(shell->parametro)){
 
@@ -350,6 +395,8 @@ static void cd(Shell *shell){
 	else {
         printf("O diretorio informado nao existe.\n");
     }
+
+    set_env_var_content(shell, "DTA", getcwd(cwd, ENV_VAR_CONTENT_BUF_SIZE));
 
     return;
 }

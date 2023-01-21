@@ -38,6 +38,8 @@ typedef struct Shell{
 
     char first_opened_working_dir[1024];
 
+    char env_var_content_resolved_buffer[1024];
+
 } Shell;
 
 /**

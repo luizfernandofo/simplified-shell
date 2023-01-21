@@ -62,7 +62,7 @@ int main(int argc, char const *argv[])
     while(true){
 
         // Nome exibido pelo shell imediatamente antes do cursor
-        printf("%s", shell.env_vars[1].content);
+        printf("%s:%s", get_env_var_content(&shell, "HOST"), get_env_var_content(&shell, "PRONTO"));
 
         // Leitura da linha de comando pelo teclado
         read_string(cmd_buff);
